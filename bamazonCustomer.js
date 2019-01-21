@@ -59,35 +59,41 @@ function startUp() {
                     if (currentStock > 0) {
                         console.log("Sorry! You requested " + (requestedQTY) + " of the " + (selectedItem) + "(s), but there is only " + (currentStock) + " available.");
                     } 
-                    else{
-                
-                            console.log("The query is working...")
+                }
+                    
+                if(requestedQTY < currentStock){                
+                            
                             var newQTY = currentStock - requestedQTY;
                            
-                            updateQuantity(newQTY,selectedItem);
+                            updateQuantity(newQTY,input.product_name);
                             console.log("───────────────────────────────────────");
-                            console.log(requestedQTY + " - " + selectedItem + ": $" + itemPrice.toFixed(2));
+                            console.log((requestedQTY) + " - " + (selectedItem) + ": $" + (itemPrice.toFixed(2)));
                             console.log("---------------------------------------")
                             console.log("Your total purchase price is: $" + totalCost(requestedQTY, parseFloat(itemPrice)));
                             console.log("───────────────────────────────────────");
-                        
+                     
                     }
-                }
+                
 
             })
     })
 }
 
+function totalCost(quantity, price) {
+    return (quantity * price).toFixed(2);
+};
 
-function updateQuantity(newQTY, selectedItem) {
+function updateQuantity(newQTY, product_name) {
+    console.log("Great! We have that many "+ product_name +" products "+"in stock. Here's your order...")
     var query  = "UPDATE bamazon.products ";
         query += "SET stock_quantity = ? ";
         query += "WHERE product_name = ?";
     connection.query(
       query,
-      [newQTY,selectedItem],
+      [newQTY,product_name],
       function (err, res) {
         if (err) throw err;
+        console.log("We now have " + newQTY+ " "+ product_name + "s left.")
       }
     );
 }
